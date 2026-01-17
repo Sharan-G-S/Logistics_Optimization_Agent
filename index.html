@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics Optimization Agent - Smart Supply Chain Management</title>
+    <meta name="description" content="AI-powered logistics optimization platform for efficient delivery route planning and intelligent inventory management">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">🚚</div>
+                    <h1 class="logo-text">LogiOptim</h1>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item active" data-section="dashboard" id="nav-dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </button>
+                <button class="nav-item" data-section="routes" id="nav-routes">
+                    <span class="nav-icon">🗺️</span>
+                    <span class="nav-text">Route Planner</span>
+                </button>
+                <button class="nav-item" data-section="inventory" id="nav-inventory">
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-text">Inventory</span>
+                </button>
+                <button class="nav-item" data-section="analytics" id="nav-analytics">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Analytics</span>
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text">System Online</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h2 class="page-title" id="page-title">Dashboard</h2>
+                    <p class="page-subtitle" id="page-subtitle">Real-time logistics overview</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-icon" id="refresh-btn" title="Refresh Data">
+                        <span>🔄</span>
+                    </button>
+                    <div class="user-profile">
+                        <div class="user-avatar">👤</div>
+                        <span class="user-name">Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section class="content-section active" id="section-dashboard">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">🚛</div>
+                        <div class="kpi-content">
+                            <p class="kpi-label">Total Routes</p>
+                            <h3 class="kpi-value" id="kpi-routes">0</h3>
+                            <p class="kpi-change positive">+12% this week</p>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-icon">📏</div>
+                        <div class="kpi-content">
+                            <p class="kpi-label">Avg Distance</p>
+                            <h3 class="kpi-value" id="kpi-distance">0 km</h3>
+                            <p class="kpi-change negative">-8% optimized</p>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-icon">📦</div>
+                        <div class="kpi-content">
+                            <p class="kpi-label">Inventory Items</p>
+                            <h3 class="kpi-value" id="kpi-inventory">0</h3>
+                            <p class="kpi-change warning" id="kpi-low-stock">0 low stock</p>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-icon">⚡</div>
+                        <div class="kpi-content">
+                            <p class="kpi-label">Efficiency Score</p>
+                            <h3 class="kpi-value" id="kpi-efficiency">95%</h3>
+                            <p class="kpi-change positive">Excellent</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recent Routes</h3>
+                            <button class="btn-text" id="view-all-routes">View All</button>
+                        </div>
+                        <div class="card-content">
+                            <div id="recent-routes-list" class="routes-list">
+                                <p class="empty-state">No routes yet. Create your first route!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Inventory Alerts</h3>
+                            <span class="badge" id="alerts-count">0</span>
+                        </div>
+                        <div class="card-content">
+                            <div id="alerts-list" class="alerts-list">
+                                <p class="empty-state">All inventory levels are healthy</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Route Planner Section -->
+            <section class="content-section" id="section-routes">
+                <div class="route-planner-container">
+                    <div class="route-form-panel">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Plan New Route</h3>
+                            </div>
+                            <div class="card-content">
+                                <form id="route-form">
+                                    <div class="form-group">
+                                        <label for="start-location">Starting Point</label>
+                                        <select id="start-location" class="form-control" required>
+                                            <option value="">Select depot...</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="destinations">Delivery Locations</label>
+                                        <div id="destinations-container" class="destinations-container">
+                                            <!-- Destinations will be added here -->
+                                        </div>
+                                        <button type="button" class="btn-secondary" id="add-destination">
+                                            + Add Destination
+                                        </button>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="vehicle-select">Vehicle</label>
+                                        <select id="vehicle-select" class="form-control">
+                                            <option value="">Auto-assign</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="algorithm-select">Optimization Algorithm</label>
+                                        <select id="algorithm-select" class="form-control">
+                                            <option value="genetic">Genetic Algorithm (Best)</option>
+                                            <option value="astar">A* Algorithm (Fast)</option>
+                                            <option value="dijkstra">Dijkstra (Simple)</option>
+                                        </select>
+                                    </div>
+
+                                    <button type="submit" class="btn-primary" id="optimize-btn">
+                                        🚀 Optimize Route
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="route-result-panel">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Route Visualization</h3>
+                            </div>
+                            <div class="card-content">
+                                <div id="route-map" class="route-map">
+                                    <div class="map-placeholder">
+                                        <span class="map-icon">🗺️</span>
+                                        <p>Create a route to see visualization</p>
+                                    </div>
+                                </div>
+                                <div id="route-details" class="route-details hidden">
+                                    <div class="route-stats">
+                                        <div class="stat">
+                                            <span class="stat-label">Total Distance</span>
+                                            <span class="stat-value" id="route-distance">0 km</span>
+                                        </div>
+                                        <div class="stat">
+                                            <span class="stat-label">Estimated Time</span>
+                                            <span class="stat-value" id="route-time">0 hrs</span>
+                                        </div>
+                                        <div class="stat">
+                                            <span class="stat-label">Stops</span>
+                                            <span class="stat-value" id="route-stops">0</span>
+                                        </div>
+                                    </div>
+                                    <div class="route-path" id="route-path"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inventory Section -->
+            <section class="content-section" id="section-inventory">
+                <div class="inventory-controls">
+                    <div class="search-box">
+                        <input type="text" id="inventory-search" class="form-control" placeholder="🔍 Search inventory...">
+                    </div>
+                    <div class="filter-group">
+                        <select id="category-filter" class="form-control">
+                            <option value="">All Categories</option>
+                        </select>
+                        <select id="warehouse-filter" class="form-control">
+                            <option value="">All Warehouses</option>
+                        </select>
+                        <select id="status-filter" class="form-control">
+                            <option value="">All Status</option>
+                            <option value="in_stock">In Stock</option>
+                            <option value="low_stock">Low Stock</option>
+                            <option value="out_of_stock">Out of Stock</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="inventory-grid" id="inventory-grid">
+                    <!-- Inventory items will be populated here -->
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section class="content-section" id="section-analytics">
+                <div class="analytics-grid">
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h3>Route Efficiency Trends</h3>
+                        </div>
+                        <div class="card-content">
+                            <canvas id="efficiency-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h3>Vehicle Utilization</h3>
+                        </div>
+                        <div class="card-content">
+                            <canvas id="vehicle-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h3>Inventory by Category</h3>
+                        </div>
+                        <div class="card-content">
+                            <canvas id="inventory-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Warehouse Utilization</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="warehouse-stats" class="warehouse-stats">
+                                <!-- Warehouse stats will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for Item Details -->
+    <div class="modal" id="item-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Item Details</h3>
+                <button class="modal-close" id="modal-close">×</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Content will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
