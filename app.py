@@ -14,6 +14,7 @@ from models import (
 )
 from route_optimizer import RouteOptimizer
 from inventory_manager import InventoryManager
+from ml_predictor import MLDemandPredictor
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend
@@ -21,6 +22,7 @@ CORS(app)  # Enable CORS for frontend
 # Initialize systems
 route_optimizer = RouteOptimizer()
 inventory_manager = InventoryManager()
+ml_predictor = MLDemandPredictor()
 
 # Load sample data
 locations = generate_sample_locations()
@@ -362,6 +364,107 @@ def get_route_efficiency():
     return jsonify({
         "route_history": route_data
     })
+
+
+@app.route('/api/gps/vehicles', methods=['GET'])
+def get_gps_tracking():
+    """Get real-time GPS tracking data for all vehicles"""
+    import random
+    import time
+    
+    # Simulate GPS coordinates for vehicles
+    # In production, this would connect to actual GPS devices
+    gps_data = []
+    
+    for vehicle in vehicles:
+        if vehicle.status in ["available", "in_transit"]:
+            # Base coordinates (Bangalore area)
+            base_lat = 12.9716
+            base_lng = 77.5946
+            
+            # Add random offset to simulate movement
+            offset = hash(vehicle.id + str(int(time.time() / 10))) % 1000 / 10000
+            
+            gps_data.append({
+                "vehicle_id": vehicle.id,
+                "vehicle_name": vehicle.name,
+                "latitude": base_lat + offset,
+                "longitude": base_lng + offset,
+                "speed": random.randint(20, 60),  # km/h
+                "status": vehicle.status,
+                "last_update": datetime.now().isoformat(),
+                "battery": random.randint(60, 100),  # percentage
+                "current_load": vehicle.current_load,
+                "capacity": vehicle.capacity
+            })
+    
+    return jsonify({
+        "vehicles": gps_data,
+        "total_tracked": len(gps_data),
+        "timestamp": datetime.now().isoformat()
+    })
+
+
+@app.route('/api/ml/predict/<item_id>', methods=['GET'])
+def ml_predict_demand(item_id):
+    """Get ML-based demand prediction for an item"""
+    try:
+        item = inventory_manager.get_item(item_id)
+        
+        if not item:
+            return jsonify({"error": "Item not found"}), 404
+        
+        # Get ML prediction
+        prediction = ml_predictor.predict_item(item_id, item.quantity)
+        
+        # Convert numpy types to Python native types for JSON serialization
+        def convert_numpy_types(obj):
+            if isinstance(obj, dict):
+                return {k: convert_numpy_types(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_numpy_types(item) for item in obj]
+            elif hasattr(obj, 'item'):  # numpy types
+                return obj.item()
+            elif isinstance(obj, (bool, int, float, str)):
+                return obj
+            else:
+                return str(obj)
+        
+        prediction_json = convert_numpy_types(prediction)
+        
+        return jsonify(prediction_json)
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/ml/insights', methods=['GET'])
+def ml_get_insights():
+    """Get overall ML insights for all inventory items"""
+    try:
+        items = inventory_manager.get_all_items()
+        
+        insights = []
+        for item in items[:5]:  # Top 5 items for performance
+            prediction = ml_predictor.predict_item(item.id, item.quantity)
+            insights.append({
+                "item_id": item.id,
+                "item_name": item.name,
+                "current_quantity": int(item.quantity),
+                "predicted_7day_demand": float(prediction['insights']['predicted_7day_demand']),
+                "days_until_stockout": int(prediction['insights']['days_until_stockout']),
+                "should_reorder": bool(prediction['insights']['should_reorder']),
+                "trend": str(prediction['insights']['trend'])
+            })
+        
+        return jsonify({
+            "insights": insights,
+            "total_items_analyzed": len(insights),
+            "timestamp": datetime.now().isoformat()
+        })
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == '__main__':

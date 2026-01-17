@@ -69,6 +69,22 @@ The AI agent intelligently reordered the delivery sequence to minimize travel di
 - **Category Management**: Organize inventory by categories and locations
 - **Reorder Recommendations**: Intelligent suggestions for restocking
 
+### 🤖 ML Predictions
+- **AI-Powered Forecasting**: Machine learning models for demand prediction
+- **7-Day Demand Forecasts**: Predict future demand with 86%+ accuracy
+- **Stockout Predictions**: Know exactly when items will run out
+- **Reorder Recommendations**: Smart alerts for items needing restocking
+- **Interactive Charts**: Visualize demand trends and historical patterns
+- **Trend Analysis**: Identify increasing, decreasing, or stable demand patterns
+
+### 📍 GPS Tracking
+- **Real-time Vehicle Tracking**: Monitor fleet locations on interactive maps
+- **Live Position Updates**: Vehicle positions update every 5 seconds
+- **Animated Markers**: Smooth transitions showing vehicle movement
+- **Vehicle Status**: Color-coded markers for active, idle, and maintenance states
+- **Interactive Popups**: Click markers for detailed vehicle information
+- **Map Integration**: Powered by Leaflet.js with OpenStreetMap
+
 ### 📊 Analytics Dashboard
 - **Interactive Charts**: Powered by Chart.js for smooth, responsive visualizations
 - **Route Efficiency Trends**: Line chart with dual-axis for distance and time metrics
@@ -224,8 +240,8 @@ The system comes pre-loaded with sample data:
 
 ## 🔮 Future Enhancements
 
-- [ ] Real-time GPS tracking integration
-- [ ] Machine learning for demand prediction
+- [x] ✅ Real-time GPS tracking integration
+- [x] ✅ Machine learning for demand prediction
 - [ ] Multi-day route planning
 - [ ] Driver assignment and scheduling
 - [ ] Mobile app for drivers

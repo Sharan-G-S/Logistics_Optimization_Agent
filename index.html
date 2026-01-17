@@ -43,6 +43,14 @@
                     <span class="nav-icon">📈</span>
                     <span class="nav-text">Analytics</span>
                 </button>
+                <button class="nav-item" data-section="gps" id="nav-gps">
+                    <span class="nav-icon">📍</span>
+                    <span class="nav-text">GPS Tracking</span>
+                </button>
+                <button class="nav-item" data-section="ml" id="nav-ml">
+                    <span class="nav-icon">🤖</span>
+                    <span class="nav-text">ML Predictions</span>
+                </button>
             </nav>
 
             <div class="sidebar-footer">
@@ -291,6 +299,69 @@
                             <div id="warehouse-stats" class="warehouse-stats">
                                 <!-- Warehouse stats will be populated here -->
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GPS Tracking Section -->
+            <section class="content-section" id="section-gps">
+                <div class="gps-container">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Live Vehicle Tracking</h3>
+                            <span class="badge" id="tracked-vehicles-count">0 vehicles</span>
+                        </div>
+                        <div class="card-content">
+                            <div id="gps-map" class="gps-map">
+                                <!-- GPS visualization will be rendered here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Vehicle Status</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="vehicle-status-list" class="vehicle-status-list">
+                                <!-- Vehicle status will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ML Predictions Section -->
+            <section class="content-section" id="section-ml">
+                <div class="ml-container">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Demand Prediction Insights</h3>
+                            <span class="badge">Powered by ML</span>
+                        </div>
+                        <div class="card-content">
+                            <div id="ml-insights-grid" class="ml-insights-grid">
+                                <!-- ML insights will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h3>Demand Forecast</h3>
+                        </div>
+                        <div class="card-content">
+                            <canvas id="ml-forecast-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h3>Historical vs Predicted</h3>
+                        </div>
+                        <div class="card-content">
+                            <canvas id="ml-comparison-chart"></canvas>
                         </div>
                     </div>
                 </div>

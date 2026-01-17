@@ -12,46 +12,46 @@
     --bg-tertiary: #1a1f3a;
     --bg-card: rgba(26, 31, 58, 0.6);
     --bg-hover: rgba(99, 102, 241, 0.1);
-    
+
     /* Accent Colors */
     --accent-primary: #6366f1;
     --accent-secondary: #8b5cf6;
     --accent-success: #10b981;
     --accent-warning: #f59e0b;
     --accent-danger: #ef4444;
-    
+
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
     --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
     --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    
+
     /* Text Colors */
     --text-primary: #f8fafc;
     --text-secondary: #cbd5e1;
     --text-tertiary: #94a3b8;
     --text-muted: #64748b;
-    
+
     /* Borders & Shadows */
     --border-color: rgba(148, 163, 184, 0.1);
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
     --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
-    
+
     /* Spacing */
     --spacing-xs: 0.5rem;
     --spacing-sm: 0.75rem;
     --spacing-md: 1rem;
     --spacing-lg: 1.5rem;
     --spacing-xl: 2rem;
-    
+
     /* Border Radius */
     --radius-sm: 0.5rem;
     --radius-md: 0.75rem;
     --radius-lg: 1rem;
     --radius-xl: 1.5rem;
-    
+
     /* Transitions */
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
@@ -192,8 +192,15 @@ body {
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
 }
 
 /* ===== Main Content ===== */
@@ -290,8 +297,15 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ===== KPI Cards ===== */
@@ -506,7 +520,8 @@ body {
     transform: scale(1.05);
 }
 
-.btn-primary, .btn-secondary {
+.btn-primary,
+.btn-secondary {
     width: 100%;
     padding: var(--spacing-md) var(--spacing-lg);
     border: none;
@@ -571,8 +586,15 @@ body {
 }
 
 @keyframes slideIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .route-stats {
@@ -797,8 +819,15 @@ body {
 }
 
 @keyframes modalSlideIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .modal-header {
@@ -831,13 +860,15 @@ body {
 }
 
 /* ===== Lists ===== */
-.routes-list, .alerts-list {
+.routes-list,
+.alerts-list {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
 }
 
-.route-item, .alert-item {
+.route-item,
+.alert-item {
     padding: var(--spacing-md);
     background: var(--bg-tertiary);
     border-radius: var(--radius-md);
@@ -845,7 +876,8 @@ body {
     transition: all var(--transition-fast);
 }
 
-.route-item:hover, .alert-item:hover {
+.route-item:hover,
+.alert-item:hover {
     background: var(--bg-hover);
     transform: translateX(4px);
 }
@@ -888,7 +920,7 @@ body {
     .route-planner-container {
         grid-template-columns: 1fr;
     }
-    
+
     .analytics-grid {
         grid-template-columns: 1fr;
     }
@@ -898,20 +930,67 @@ body {
     .sidebar {
         width: 70px;
     }
-    
+
     .main-content {
         margin-left: 70px;
     }
-    
-    .nav-text, .logo-text {
+
+    .nav-text,
+    .logo-text {
         display: none;
     }
-    
+
     .kpi-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .dashboard-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* ===== GPS Tracking ===== */
+.gps-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-lg);
+}
+
+.gps-map {
+    min-height: 500px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vehicle-status-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* ===== ML Predictions ===== */
+.ml-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.ml-insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.ml-insight-card {
+    transition: all var(--transition-normal);
+}
+
+.ml-insight-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
 }

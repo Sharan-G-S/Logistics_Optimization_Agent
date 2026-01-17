@@ -54,7 +54,9 @@ function switchSection(sectionName) {
         dashboard: { title: 'Dashboard', subtitle: 'Real-time logistics overview' },
         routes: { title: 'Route Planner', subtitle: 'Optimize delivery routes' },
         inventory: { title: 'Inventory Management', subtitle: 'Track and manage stock levels' },
-        analytics: { title: 'Analytics', subtitle: 'Performance insights and metrics' }
+        analytics: { title: 'Analytics', subtitle: 'Performance insights and metrics' },
+        gps: { title: 'GPS Tracking', subtitle: 'Live vehicle location monitoring' },
+        ml: { title: 'ML Predictions', subtitle: 'AI-powered demand forecasting' }
     };
 
     const titleInfo = titles[sectionName] || titles.dashboard;
@@ -66,6 +68,13 @@ function switchSection(sectionName) {
         loadInventory();
     } else if (sectionName === 'analytics') {
         loadAnalytics();
+    } else if (sectionName === 'gps') {
+        loadGPSTracking();
+    } else if (sectionName === 'ml') {
+        loadMLPredictions();
+    } else if (sectionName !== 'gps') {
+        // Cleanup GPS tracking when leaving GPS section
+        cleanupGPSTracking();
     }
 }
 
@@ -880,6 +889,285 @@ function showNotification(message, type = 'info') {
         notification.style.animation = 'fadeOut 0.3s ease';
         setTimeout(() => notification.remove(), 300);
     }, 3000);
+}
+
+// GPS Tracking
+let gpsUpdateInterval = null;
+
+async function loadGPSTracking() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/gps/vehicles`);
+        const data = await response.json();
+
+        displayGPSMap(data.vehicles);
+        displayVehicleStatus(data.vehicles);
+
+        document.getElementById('tracked-vehicles-count').textContent = `${data.total_tracked} vehicles`;
+
+        // Auto-refresh every 5 seconds
+        if (!gpsUpdateInterval) {
+            gpsUpdateInterval = setInterval(loadGPSTracking, 5000);
+        }
+    } catch (error) {
+        console.error('Error loading GPS tracking:', error);
+    }
+}
+
+function displayGPSMap(vehicles) {
+    const container = document.getElementById('gps-map');
+
+    if (vehicles.length === 0) {
+        container.innerHTML = '<p class="empty-state">No vehicles currently tracked</p>';
+        return;
+    }
+
+    // Create SVG map visualization
+    const width = 800;
+    const height = 500;
+    const padding = 50;
+
+    // Calculate bounds
+    const lats = vehicles.map(v => v.latitude);
+    const lons = vehicles.map(v => v.longitude);
+    const minLat = Math.min(...lats) - 0.01;
+    const maxLat = Math.max(...lats) + 0.01;
+    const minLon = Math.min(...lons) - 0.01;
+    const maxLon = Math.max(...lons) + 0.01;
+
+    // Scale coordinates
+    const scaleX = (lon) => ((lon - minLon) / (maxLon - minLon)) * (width - 2 * padding) + padding;
+    const scaleY = (lat) => height - (((lat - minLat) / (maxLat - minLat)) * (height - 2 * padding) + padding);
+
+    let svg = `<svg width="100%" height="500" viewBox="0 0 ${width} ${height}" style="background: var(--bg-tertiary); border-radius: var(--radius-md);">`;
+
+    // Add grid lines
+    svg += `<defs>
+        <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(148, 163, 184, 0.1)" stroke-width="1"/>
+        </pattern>
+    </defs>
+    <rect width="${width}" height="${height}" fill="url(#grid)" />`;
+
+    // Draw vehicles
+    vehicles.forEach((vehicle, index) => {
+        const x = scaleX(vehicle.longitude);
+        const y = scaleY(vehicle.latitude);
+        const color = vehicle.status === 'in_transit' ? '#10b981' : '#6366f1';
+
+        svg += `
+            <g class="vehicle-marker">
+                <circle cx="${x}" cy="${y}" r="20" fill="${color}" opacity="0.2">
+                    <animate attributeName="r" values="20;30;20" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="${x}" cy="${y}" r="12" fill="${color}" stroke="white" stroke-width="2"/>
+                <text x="${x}" y="${y + 30}" text-anchor="middle" fill="white" font-size="11" font-weight="600">${vehicle.vehicle_name}</text>
+                <text x="${x}" y="${y + 45}" text-anchor="middle" fill="#94a3b8" font-size="10">${vehicle.speed} km/h</text>
+            </g>
+        `;
+    });
+
+    svg += '</svg>';
+    container.innerHTML = svg;
+}
+
+function displayVehicleStatus(vehicles) {
+    const container = document.getElementById('vehicle-status-list');
+
+    container.innerHTML = vehicles.map(vehicle => `
+        <div class="vehicle-status-item" style="padding: 1rem; background: var(--bg-tertiary); border-radius: var(--radius-md); margin-bottom: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <strong>${vehicle.vehicle_name}</strong>
+                <span class="badge" style="background: ${vehicle.status === 'in_transit' ? 'var(--accent-success)' : 'var(--accent-primary)'};">
+                    ${vehicle.status.replace('_', ' ')}
+                </span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.875rem; color: var(--text-tertiary);">
+                <div>🚀 Speed: ${vehicle.speed} km/h</div>
+                <div>🔋 Battery: ${vehicle.battery}%</div>
+                <div>📦 Load: ${vehicle.current_load}/${vehicle.capacity} kg</div>
+                <div>📍 Last update: ${new Date(vehicle.last_update).toLocaleTimeString()}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ML Predictions
+async function loadMLPredictions() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/ml/insights`);
+        const data = await response.json();
+
+        displayMLInsights(data.insights);
+
+        // Load detailed prediction for first item
+        if (data.insights.length > 0) {
+            const firstItemId = data.insights[0].item_id;
+            await loadMLCharts(firstItemId);
+        }
+    } catch (error) {
+        console.error('Error loading ML predictions:', error);
+    }
+}
+
+function displayMLInsights(insights) {
+    const container = document.getElementById('ml-insights-grid');
+
+    if (insights.length === 0) {
+        container.innerHTML = '<p class="empty-state">No ML insights available</p>';
+        return;
+    }
+
+    container.innerHTML = insights.map(insight => {
+        const trendIcon = insight.trend === 'increasing' ? '📈' : insight.trend === 'decreasing' ? '📉' : '➡️';
+        const trendColor = insight.trend === 'increasing' ? 'var(--accent-warning)' : insight.trend === 'decreasing' ? 'var(--accent-success)' : 'var(--text-tertiary)';
+
+        return `
+            <div class="ml-insight-card" style="padding: 1.5rem; background: var(--bg-secondary); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                    <div>
+                        <h4 style="margin: 0 0 0.25rem 0;">${insight.item_name}</h4>
+                        <p style="font-size: 0.875rem; color: var(--text-tertiary); margin: 0;">Current: ${insight.current_quantity} units</p>
+                    </div>
+                    <span style="font-size: 1.5rem;">${trendIcon}</span>
+                </div>
+                
+                <div style="display: grid; gap: 0.75rem; margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-tertiary);">7-Day Demand:</span>
+                        <strong>${insight.predicted_7day_demand} units</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-tertiary);">Days Until Stockout:</span>
+                        <strong style="color: ${insight.days_until_stockout < 7 ? 'var(--accent-danger)' : 'var(--accent-success)'};">
+                            ${insight.days_until_stockout} days
+                        </strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-tertiary);">Trend:</span>
+                        <strong style="color: ${trendColor};">${insight.trend}</strong>
+                    </div>
+                </div>
+                
+                ${insight.should_reorder ? `
+                    <div style="padding: 0.75rem; background: rgba(239, 68, 68, 0.1); border-radius: var(--radius-md); border-left: 3px solid var(--accent-danger);">
+                        <strong style="color: var(--accent-danger);">⚠️ Reorder Recommended</strong>
+                    </div>
+                ` : `
+                    <div style="padding: 0.75rem; background: rgba(16, 185, 129, 0.1); border-radius: var(--radius-md); border-left: 3px solid var(--accent-success);">
+                        <strong style="color: var(--accent-success);">✅ Stock Healthy</strong>
+                    </div>
+                `}
+            </div>
+        `;
+    }).join('');
+}
+
+async function loadMLCharts(itemId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/ml/predict/${itemId}`);
+        const data = await response.json();
+
+        createMLForecastChart(data);
+        createMLComparisonChart(data);
+    } catch (error) {
+        console.error('Error loading ML charts:', error);
+    }
+}
+
+function createMLForecastChart(data) {
+    const canvas = document.getElementById('ml-forecast-chart');
+    const ctx = canvas.getContext('2d');
+
+    // Destroy existing chart if any
+    if (canvas.chart) {
+        canvas.chart.destroy();
+    }
+
+    const chartData = {
+        labels: data.predictions_7day.map(p => new Date(p.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+        datasets: [{
+            label: 'Predicted Demand',
+            data: data.predictions_7day.map(p => p.predicted_demand),
+            borderColor: chartColors.primary,
+            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+            tension: 0.4,
+            fill: true,
+            pointRadius: 5,
+            pointHoverRadius: 7
+        }]
+    };
+
+    canvas.chart = new Chart(ctx, {
+        type: 'line',
+        data: chartData,
+        options: {
+            ...chartOptions,
+            plugins: {
+                ...chartOptions.plugins,
+                title: {
+                    display: true,
+                    text: `7-Day Forecast (Accuracy: ${data.model_accuracy}%)`,
+                    color: '#cbd5e1',
+                    font: {
+                        family: 'Inter',
+                        size: 14,
+                        weight: '600'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function createMLComparisonChart(data) {
+    const canvas = document.getElementById('ml-comparison-chart');
+    const ctx = canvas.getContext('2d');
+
+    // Destroy existing chart if any
+    if (canvas.chart) {
+        canvas.chart.destroy();
+    }
+
+    const chartData = {
+        labels: data.historical_data.map(h => new Date(h.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+        datasets: [{
+            label: 'Historical Demand',
+            data: data.historical_data.map(h => h.demand),
+            borderColor: chartColors.success,
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            tension: 0.4,
+            fill: true
+        }]
+    };
+
+    canvas.chart = new Chart(ctx, {
+        type: 'line',
+        data: chartData,
+        options: {
+            ...chartOptions,
+            plugins: {
+                ...chartOptions.plugins,
+                title: {
+                    display: true,
+                    text: 'Historical Demand Pattern (Last 14 Days)',
+                    color: '#cbd5e1',
+                    font: {
+                        family: 'Inter',
+                        size: 14,
+                        weight: '600'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Cleanup GPS interval when leaving GPS section
+function cleanupGPSTracking() {
+    if (gpsUpdateInterval) {
+        clearInterval(gpsUpdateInterval);
+        gpsUpdateInterval = null;
+    }
 }
 
 // Add initial destination field on load
