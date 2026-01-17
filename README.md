@@ -1,5 +1,7 @@
 # 🚚 Logistics Optimization Agent
 
+# Sharan G S
+
 An AI-powered logistics optimization platform that plans efficient delivery routes and manages inventory with intelligent forecasting and real-time analytics.
 
 ![Platform](https://img.shields.io/badge/Platform-Web-blue)
