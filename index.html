@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logistics Optimization Agent - Smart Supply Chain Management</title>
-    <meta name="description" content="AI-powered logistics optimization platform for efficient delivery route planning and intelligent inventory management">
+    <meta name="description"
+        content="AI-powered logistics optimization platform for efficient delivery route planning and intelligent inventory management">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
+
 <body>
     <div class="app-container">
         <!-- Sidebar Navigation -->
@@ -20,7 +25,7 @@
                     <h1 class="logo-text">LogiOptim</h1>
                 </div>
             </div>
-            
+
             <nav class="nav-menu">
                 <button class="nav-item active" data-section="dashboard" id="nav-dashboard">
                     <span class="nav-icon">📊</span>
@@ -39,7 +44,7 @@
                     <span class="nav-text">Analytics</span>
                 </button>
             </nav>
-            
+
             <div class="sidebar-footer">
                 <div class="status-indicator">
                     <span class="status-dot"></span>
@@ -78,7 +83,7 @@
                             <p class="kpi-change positive">+12% this week</p>
                         </div>
                     </div>
-                    
+
                     <div class="kpi-card">
                         <div class="kpi-icon">📏</div>
                         <div class="kpi-content">
@@ -87,7 +92,7 @@
                             <p class="kpi-change negative">-8% optimized</p>
                         </div>
                     </div>
-                    
+
                     <div class="kpi-card">
                         <div class="kpi-icon">📦</div>
                         <div class="kpi-content">
@@ -96,7 +101,7 @@
                             <p class="kpi-change warning" id="kpi-low-stock">0 low stock</p>
                         </div>
                     </div>
-                    
+
                     <div class="kpi-card">
                         <div class="kpi-icon">⚡</div>
                         <div class="kpi-content">
@@ -224,7 +229,8 @@
             <section class="content-section" id="section-inventory">
                 <div class="inventory-controls">
                     <div class="search-box">
-                        <input type="text" id="inventory-search" class="form-control" placeholder="🔍 Search inventory...">
+                        <input type="text" id="inventory-search" class="form-control"
+                            placeholder="🔍 Search inventory...">
                     </div>
                     <div class="filter-group">
                         <select id="category-filter" class="form-control">
@@ -307,4 +313,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

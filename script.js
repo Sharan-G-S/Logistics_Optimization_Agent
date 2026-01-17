@@ -585,26 +585,254 @@ function displayWarehouseStats(warehouses) {
 }
 
 function displayChartPlaceholders() {
-    const charts = ['efficiency-chart', 'vehicle-chart', 'inventory-chart'];
+    createRouteEfficiencyChart();
+    createVehicleUtilizationChart();
+    createInventoryCategoryChart();
+}
 
-    charts.forEach(chartId => {
-        const canvas = document.getElementById(chartId);
-        const ctx = canvas.getContext('2d');
+// Chart.js configurations
+const chartColors = {
+    primary: '#6366f1',
+    secondary: '#8b5cf6',
+    success: '#10b981',
+    warning: '#f59e0b',
+    danger: '#ef4444',
+    info: '#3b82f6'
+};
 
-        // Set canvas size
-        canvas.width = canvas.offsetWidth;
-        canvas.height = 300;
+const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: {
+            labels: {
+                color: '#cbd5e1',
+                font: {
+                    family: 'Inter',
+                    size: 12
+                }
+            }
+        },
+        tooltip: {
+            backgroundColor: 'rgba(26, 31, 58, 0.9)',
+            titleColor: '#f8fafc',
+            bodyColor: '#cbd5e1',
+            borderColor: '#6366f1',
+            borderWidth: 1,
+            padding: 12,
+            displayColors: true,
+            callbacks: {
+                labelColor: function (context) {
+                    return {
+                        borderColor: context.dataset.borderColor,
+                        backgroundColor: context.dataset.backgroundColor
+                    };
+                }
+            }
+        }
+    },
+    scales: {
+        y: {
+            beginAtZero: true,
+            grid: {
+                color: 'rgba(148, 163, 184, 0.1)'
+            },
+            ticks: {
+                color: '#94a3b8',
+                font: {
+                    family: 'Inter'
+                }
+            }
+        },
+        x: {
+            grid: {
+                color: 'rgba(148, 163, 184, 0.1)'
+            },
+            ticks: {
+                color: '#94a3b8',
+                font: {
+                    family: 'Inter'
+                }
+            }
+        }
+    }
+};
 
-        // Draw placeholder
-        ctx.fillStyle = 'rgba(99, 102, 241, 0.1)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+async function createRouteEfficiencyChart() {
+    const canvas = document.getElementById('efficiency-chart');
+    const ctx = canvas.getContext('2d');
 
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = '16px Inter';
-        ctx.textAlign = 'center';
-        ctx.fillText('📊 Chart visualization', canvas.width / 2, canvas.height / 2 - 10);
-        ctx.fillText('(Install Chart.js for interactive charts)', canvas.width / 2, canvas.height / 2 + 15);
-    });
+    try {
+        const response = await fetch(`${API_BASE_URL}/analytics/route-efficiency`);
+        const data = await response.json();
+
+        const chartData = {
+            labels: data.route_history.map(r => r.date.split(' ')[1] || r.date),
+            datasets: [
+                {
+                    label: 'Distance (km)',
+                    data: data.route_history.map(r => r.distance),
+                    borderColor: chartColors.primary,
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'Time (hrs)',
+                    data: data.route_history.map(r => r.time),
+                    borderColor: chartColors.secondary,
+                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    yAxisID: 'y1'
+                }
+            ]
+        };
+
+        new Chart(ctx, {
+            type: 'line',
+            data: chartData,
+            options: {
+                ...chartOptions,
+                scales: {
+                    ...chartOptions.scales,
+                    y1: {
+                        type: 'linear',
+                        position: 'right',
+                        beginAtZero: true,
+                        grid: {
+                            drawOnChartArea: false
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                            font: {
+                                family: 'Inter'
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error creating route efficiency chart:', error);
+    }
+}
+
+async function createVehicleUtilizationChart() {
+    const canvas = document.getElementById('vehicle-chart');
+    const ctx = canvas.getContext('2d');
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/vehicles`);
+        const data = await response.json();
+
+        const chartData = {
+            labels: data.vehicles.map(v => v.name),
+            datasets: [{
+                label: 'Capacity Utilization (%)',
+                data: data.vehicles.map(v => ((v.current_load / v.capacity) * 100).toFixed(1)),
+                backgroundColor: [
+                    'rgba(99, 102, 241, 0.8)',
+                    'rgba(139, 92, 246, 0.8)',
+                    'rgba(16, 185, 129, 0.8)',
+                    'rgba(245, 158, 11, 0.8)',
+                    'rgba(239, 68, 68, 0.8)'
+                ],
+                borderColor: [
+                    chartColors.primary,
+                    chartColors.secondary,
+                    chartColors.success,
+                    chartColors.warning,
+                    chartColors.danger
+                ],
+                borderWidth: 2
+            }]
+        };
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {
+                ...chartOptions,
+                plugins: {
+                    ...chartOptions.plugins,
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error creating vehicle chart:', error);
+    }
+}
+
+async function createInventoryCategoryChart() {
+    const canvas = document.getElementById('inventory-chart');
+    const ctx = canvas.getContext('2d');
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/inventory`);
+        const data = await response.json();
+
+        // Group by category
+        const categoryData = {};
+        data.items.forEach(item => {
+            if (!categoryData[item.category]) {
+                categoryData[item.category] = 0;
+            }
+            categoryData[item.category]++;
+        });
+
+        const chartData = {
+            labels: Object.keys(categoryData),
+            datasets: [{
+                label: 'Items per Category',
+                data: Object.values(categoryData),
+                backgroundColor: [
+                    'rgba(99, 102, 241, 0.8)',
+                    'rgba(139, 92, 246, 0.8)',
+                    'rgba(16, 185, 129, 0.8)',
+                    'rgba(245, 158, 11, 0.8)',
+                    'rgba(239, 68, 68, 0.8)'
+                ],
+                borderColor: [
+                    chartColors.primary,
+                    chartColors.secondary,
+                    chartColors.success,
+                    chartColors.warning,
+                    chartColors.danger
+                ],
+                borderWidth: 2
+            }]
+        };
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#cbd5e1',
+                            font: {
+                                family: 'Inter',
+                                size: 12
+                            },
+                            padding: 15
+                        }
+                    },
+                    tooltip: chartOptions.plugins.tooltip
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error creating inventory chart:', error);
+    }
 }
 
 // Modal

@@ -1,10 +1,30 @@
 # 🚚 Logistics Optimization Agent
+By Sharan G S
 
 An AI-powered logistics optimization platform that plans efficient delivery routes and manages inventory with intelligent forecasting and real-time analytics.
 
 ![Platform](https://img.shields.io/badge/Platform-Web-blue)
 ![Python](https://img.shields.io/badge/Python-3.8+-green)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
+
+## 📸 Screenshots
+
+### Dashboard - Real-time Overview
+![Dashboard](screenshots/dashboard.png)
+*KPI monitoring with live inventory alerts and route statistics*
+
+### Route Planner - Intelligent Optimization
+![Route Planner](screenshots/route_planner.png)
+*Multi-algorithm route optimization with interactive map visualization*
+
+### Inventory Management - Smart Tracking
+![Inventory](screenshots/inventory.png)
+*Real-time stock monitoring with status indicators and forecasting*
+
+### Analytics - Interactive Charts with Chart.js
+![Analytics](screenshots/analytics_charts.png)
+*Advanced data visualization with line charts, bar charts, and doughnut charts*
+
 
 ## ✨ Features
 
@@ -23,10 +43,12 @@ An AI-powered logistics optimization platform that plans efficient delivery rout
 - **Reorder Recommendations**: Intelligent suggestions for restocking
 
 ### 📊 Analytics Dashboard
+- **Interactive Charts**: Powered by Chart.js for smooth, responsive visualizations
+- **Route Efficiency Trends**: Line chart with dual-axis for distance and time metrics
+- **Vehicle Utilization**: Bar chart showing capacity usage across fleet
+- **Inventory Distribution**: Doughnut chart displaying category breakdown
 - **KPI Monitoring**: Track key performance indicators in real-time
-- **Route Efficiency**: Analyze delivery performance and optimization gains
 - **Warehouse Utilization**: Monitor capacity and stock health
-- **Inventory Insights**: Category-wise distribution and turnover rates
 
 ### 🎨 Premium UI/UX
 - **Modern Dark Theme**: Sleek, professional interface with glassmorphism
@@ -162,6 +184,7 @@ script.js     # API integration and UI logic
 - HTML5 - Semantic markup
 - CSS3 - Modern styling with custom properties
 - Vanilla JavaScript - No framework dependencies
+- Chart.js 4.4.1 - Interactive data visualizations
 - Inter Font - Professional typography
 
 ## 📊 Sample Data
@@ -183,7 +206,7 @@ The system comes pre-loaded with sample data:
 - [ ] Export reports to PDF/Excel
 - [ ] Email notifications for alerts
 - [ ] Multi-tenant support
-- [ ] Advanced analytics with Chart.js
+- [ ] Advanced predictive analytics
 
 ## 🤝 Contributing
 
@@ -195,7 +218,7 @@ This project is licensed under the MIT License.
 
 ## 👨‍💻 Author
 
-Built with ❤️ using Antigravity AI
+*Sharan G S*
 
 ## 🙏 Acknowledgments
 
