@@ -186,8 +186,12 @@ The system comes pre-loaded with sample data:
 - [ ] Advanced analytics with Chart.js
 
 ## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+This is an educational project. Feel free to:
+Report issues
+Suggest improvements
+Add more medical knowledge to the knowledge base
+Improve prompts for better analysis
+Gmail- sharangs08@gmail.com
 
 ## 📝 License
 
@@ -195,7 +199,7 @@ This project is licensed under the MIT License.
 
 ## 👨‍💻 Author
 
-Built with ❤️ using Antigravity AI
+
 
 ## 🙏 Acknowledgments
 
