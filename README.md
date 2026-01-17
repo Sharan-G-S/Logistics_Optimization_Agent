@@ -1,5 +1,6 @@
 # 🚚 Logistics Optimization Agent
-By Sharan G S
+
+**By Sharan G S**
 
 An AI-powered logistics optimization platform that plans efficient delivery routes and manages inventory with intelligent forecasting and real-time analytics.
 
@@ -210,7 +211,13 @@ The system comes pre-loaded with sample data:
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+This is an educational project. Feel free to:
+- Report issues
+- Suggest improvements
+- Add more features
+- Improve algorithms
+
+**Contact**: sharangs08@gmail.com
 
 ## 📝 License
 
@@ -218,7 +225,7 @@ This project is licensed under the MIT License.
 
 ## 👨‍💻 Author
 
-*Sharan G S*
+**Sharan G S**
 
 ## 🙏 Acknowledgments
 
@@ -231,3 +238,5 @@ This project is licensed under the MIT License.
 **Need Help?** Open an issue or check the documentation above.
 
 **Enjoy optimizing your logistics! 🚀**
+
+*Made with 💚 by Sharan G S*
