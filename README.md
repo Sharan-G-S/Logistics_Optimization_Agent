@@ -172,18 +172,6 @@ The system comes pre-loaded with sample data:
 - **12 Inventory Items**: Across 5 categories
 - **2 Warehouses**: With utilization tracking
 
-## 🔮 Future Enhancements
-
-- [ ] Real-time GPS tracking integration
-- [ ] Machine learning for demand prediction
-- [ ] Multi-day route planning
-- [ ] Driver assignment and scheduling
-- [ ] Mobile app for drivers
-- [ ] Integration with Google Maps API
-- [ ] Export reports to PDF/Excel
-- [ ] Email notifications for alerts
-- [ ] Multi-tenant support
-- [ ] Advanced analytics with Chart.js
 
 ## 🤝 Contributing
 This is an educational project. Feel free to:
@@ -194,12 +182,7 @@ Improve prompts for better analysis
 Gmail- sharangs08@gmail.com
 
 ## 📝 License
-
 This project is licensed under the MIT License.
-
-## 👨‍💻 Author
-
-
 
 ## 🙏 Acknowledgments
 
@@ -212,3 +195,6 @@ This project is licensed under the MIT License.
 **Need Help?** Open an issue or check the documentation above.
 
 **Enjoy optimizing your logistics! 🚀**
+
+
+*Made with 💚 from Sharan G S*
